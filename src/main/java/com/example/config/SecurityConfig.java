@@ -23,7 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
 
     @Autowired
-    public SecurityConfig(SuccessUserHandler successUserHandler,@Qualifier("userDetailServiceImpl") UserDetailsService userDetailsService) {
+    public SecurityConfig(SuccessUserHandler successUserHandler, @Qualifier("userDetailServiceImpl") UserDetailsService userDetailsService) {
         this.successUserHandler = successUserHandler;
         this.userDetailsService = userDetailsService;
     }
@@ -55,12 +55,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder(5);
     }
 
- protected DaoAuthenticationProvider daoAuthenticationProvider() {
+    protected DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-     authProvider.setPasswordEncoder(passwordEncoder());
-     authProvider.setUserDetailsService(userDetailsService);
-     return authProvider;
- }
+        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setUserDetailsService(userDetailsService);
+        return authProvider;
+    }
 }
 
 

@@ -11,10 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
-public class PersonService  {
+public class PersonService {
 
 
     private final PersonDao personDao;
+    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
 
     @Autowired
     public PersonService(PersonDao personDao) {
@@ -23,6 +25,11 @@ public class PersonService  {
 
     public List<Person> getPersons() {
         return personDao.findAll();
+    }
+
+    public Person getPersonByEmail(String email) {
+        return personDao.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Пользователя с email = " + email + "не существует"));
     }
 
     public Person getPerson(Long id) {
@@ -35,7 +42,6 @@ public class PersonService  {
         if (personOptional.isPresent()) {
             throw new IllegalArgumentException("Пользователь с этой почтой уже существует");
         }
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         person.setPassword(passwordEncoder.encode(person.getPassword()));
         personDao.save(person);
     }
@@ -62,7 +68,7 @@ public class PersonService  {
             person.setAge(age);
         }
         if (password != null && !password.isEmpty() && !Objects.equals(password, person.getPassword())) {
-            person.setPassword(password);
+            person.setPassword(passwordEncoder.encode(password));
         }
         if (role != person.getRole() && role != null) {
             person.setRole(role);

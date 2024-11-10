@@ -4,6 +4,8 @@ import com.example.model.Person;
 import com.example.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,45 +23,17 @@ public class PersonController {
 
     @GetMapping("/user")
     @PreAuthorize("hasAuthority('DEVELOPERS:READ')")
-    public String user(Model model, @RequestParam Long id) {
-        model.addAttribute("person", personService.getPerson(id));
+    public String user(Model model, @AuthenticationPrincipal UserDetails person) {
+        model.addAttribute("personU", personService.getPersonByEmail(person.getUsername()));
         return "userPage";
     }
 
     @GetMapping("/admin")
     @PreAuthorize("hasAuthority('DEVELOPERS:WRITE')")
-    public String getAdminPage(Model model) {
+    public String getAdminPage(Model model, @AuthenticationPrincipal UserDetails person) {
         model.addAttribute("persons", personService.getPersons());
+        model.addAttribute("personU", personService.getPersonByEmail(person.getUsername()));
         model.addAttribute("person", new Person());
         return "adminPage";
-    }
-
-    @GetMapping("/user{id}")
-    @PreAuthorize("hasAuthority('DEVELOPERS:WRITE')")
-    public Person getUserPage(@RequestParam Long id) {
-        return personService.getPerson(id);
-    }
-
-    @PostMapping("/add")
-    @PreAuthorize("hasAuthority('DEVELOPERS:WRITE')")
-    public String addPerson(@ModelAttribute("person") Person person) {
-        personService.addNewPerson(person);
-        return "redirect:/people/admin";
-    }
-
-    @PostMapping( "/delete")
-    @PreAuthorize("hasAuthority('DEVELOPERS:WRITE')")
-    public String deletePerson(@RequestParam("id") Long id) {
-        personService.deletePerson(id);
-        return "redirect:/people/admin";
-    }
-
-    @PostMapping( "/edit")
-    @PreAuthorize("hasAuthority('DEVELOPERS:WRITE')")
-    public String updatePerson(@ModelAttribute("personEdit") Person personEdit) {
-        personService.updatePerson(
-                personEdit.getId(), personEdit.getFirstName(), personEdit.getLastName(), personEdit.getEmail(), personEdit.getAge(),
-                personEdit.getPassword(), personEdit.getRole());
-        return "redirect:/people/admin";
     }
 }

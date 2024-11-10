@@ -11,7 +11,11 @@
 <!-- Top Navigation -->
 <nav class="navbar navbar-dark bg-dark">
     <div class="container-fluid">
-        <span class="navbar-text"> admin@mail.ru with roles: ADMIN USER </span>
+        <span class="navbar-text">
+            <span th:text="${personU.email}"></span>
+            <span>with role:</span>
+            <span th:text="${personU.role}"></span>
+        </span>
         <form class="d-flex">
             <a class="btn btn-primary" th:href="@{/logout}" role="button">Logout</a>
         </form>
@@ -27,10 +31,6 @@
             <!-- Navigator Tabs -->
             <div class="nav flex-column nav-pills me-3" role="tablist" aria-orientation="vertical" tabindex="0">
                 <button class="nav-link active" data-bs-toggle="pill"
-                        data-bs-target="#adminTabs" type="button" role="tab" aria-controls="adminTabs"
-                        aria-selected="true">Admin
-                </button>
-                <button class="nav-link" data-bs-toggle="pill"
                         data-bs-target="#userTabs" type="button" role="tab" aria-controls="userTabs"
                         aria-selected="true">User
                 </button>
@@ -44,7 +44,8 @@
             <div class="tab-content">
 
                 <!-- User Tab -->
-                <div class="tab-pane fade" id="userTabs" role="tabpanel" aria-labelledby="userTabs" tabindex="0">
+                <div class="tab-pane fade show active" id="userTabs" role="tabpanel" aria-labelledby="userTabs"
+                     tabindex="0">
 
                     <!-- User Navigator -->
                     <nav>
@@ -75,15 +76,14 @@
                                 </tr>
                                 </thead>
                                 <tbody id="userTableBody">
-                                <tr th:each="personi: ${persons[0]}">
-                                    <td th:text="${personi.id}"></td>
-                                    <td th:text="${personi.firstName}"></td>
-                                    <td th:text="${personi.lastName}"></td>
-                                    <td th:text="${personi.age}"></td>
-                                    <td th:text="${personi.email}"></td>
-                                    <td th:text="${personi.role}"></td>
-                                    <td th:text="${personi.password}"></td>
-                                    <td th:text="${personi.status}"></td>
+                                <tr>
+                                    <td th:text="${personU.firstName}"></td>
+                                    <td th:text="${personU.lastName}"></td>
+                                    <td th:text="${personU.age}"></td>
+                                    <td th:text="${personU.email}"></td>
+                                    <td th:text="${personU.role}"></td>
+                                    <td th:text="${personU.password}"></td>
+                                    <td th:text="${personU.status}"></td>
                                 </tr>
                                 </tbody>
                             </table>
